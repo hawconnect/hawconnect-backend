@@ -1,0 +1,58 @@
+"""
+Enum representing the original language of a meal.
+"""
+enum OriginalLanguage {
+    """
+    German language code
+    """
+    de
+    """
+    English language code
+    """
+    en
+}
+
+"""
+Enum representing the kind of user. This is used to target announcements to specific user groups.
+"""
+enum UserKind {
+    """
+    Student
+    """
+    STUDENT
+    """
+    Employee
+    """
+    EMPLOYEE
+    """
+    Guest
+    """
+    GUEST
+}
+
+"""
+Enum representing the platform of the user. This is used to target announcements to specific user groups.
+"""
+enum Platform {
+    """
+    Android
+    """
+    ANDROID
+    """
+    iOS
+    """
+    IOS
+    """
+    Web
+    """
+    WEB
+}
+
+"""
+Enum representing the different restaurant locations. This is used as a parameter for the food query.
+"""
+enum RestaurantLocation {
+    BerlinerTorMensa
+    BergedorfMensa
+    FinkenauMensa
+}

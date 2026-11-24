@@ -1,0 +1,88 @@
+"""
+Input type for the multi language string.
+"""
+input MultiLanguageStringInput {
+    en: String!
+    de: String!
+}
+
+"""
+Input type for the host of an event.
+"""
+input HostInput {
+    """
+    Name of the event host
+    """
+    name: String!
+    """
+    URL to the event host website
+    """
+    website: URL
+    """
+    Instagram URL of the event host
+    """
+    instagram: URL
+}
+
+input AccountSyncOperationInput {
+    operationId: ID!
+    kind: String!
+    entityId: ID!
+    baseRevision: Int!
+    deleted: Boolean!
+    payloadJson: String!
+}
+
+input MarketPostInput {
+    type: String!
+    category: String!
+    title: String!
+    description: String!
+    priceEur: Float
+    priceFree: Boolean!
+    priceUnit: String
+    location: String
+    availableFrom: String
+    details: MarketDetailsInput!
+}
+
+"""
+Category-specific listing fields. Which ones apply depends on the category and type; the server rejects the rest.
+"""
+input MarketDetailsInput {
+    employer: String
+    jobType: String
+    workMode: String
+    languages: [String!]
+    weeklyHours: Int
+    requirements: String
+    applyMethod: String
+    applyUrl: String
+    applyEmail: String
+    applyDeadline: String
+    contactName: String
+    contactRole: String
+    contactEmail: String
+    companyWebsite: String
+    skills: String
+    portfolioUrl: String
+    housingType: String
+    rentalDuration: String
+    deposit: Int
+    rentIncludes: [String!]
+    sizeSqm: Int
+    rooms: Int
+    furnished: String
+    facilities: [String!]
+    occupation: String
+}
+
+input MarketReportInput {
+    reason: String!
+    note: String
+}
+
+input MarketFilter {
+    type: String
+    category: String
+}

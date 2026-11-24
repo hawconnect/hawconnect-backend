@@ -1,0 +1,37 @@
+[
+    {
+        "clientId": "hawconnect-app",
+        "name": "HAWConnect App",
+        "type": "confidential",
+        "firstParty": true,
+        "scopes": [
+            "openid",
+            "email",
+            "offline_access"
+        ],
+        "redirectUris": [
+            "${HAWCONNECT_AUTH_ORIGIN}/api/accounts/oidc/callback",
+            "hawconnect://auth/callback"
+        ],
+        "postLogoutRedirectUris": [
+            "${HAWCONNECT_WEB_ORIGIN}/"
+        ]
+    },
+    {
+        "clientId": "hawconnect-console",
+        "name": "HAWConnect Console",
+        "type": "confidential",
+        "firstParty": true,
+        "requires": "HAWCONNECT_CONSOLE_ORIGIN",
+        "scopes": [
+            "openid",
+            "email"
+        ],
+        "redirectUris": [
+            "${HAWCONNECT_CONSOLE_ORIGIN}/auth/callback"
+        ],
+        "postLogoutRedirectUris": [
+            "${HAWCONNECT_CONSOLE_ORIGIN}/login"
+        ]
+    }
+]

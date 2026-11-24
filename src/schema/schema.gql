@@ -1,0 +1,58 @@
+"""
+Root query
+"""
+type Query {
+    campusLifeEvents: CampusLifePublicFeed!
+    hawClubs(language: String = "de"): HawClubsResponse!
+    hawEvents(language: String = "de"): HawEventsResponse!
+    """
+    Latest public HAW Hamburg news (first listing page) in the given language.
+    """
+    hawNews(language: String = "de"): HawNewsResponse!
+    academicCalendar: AcademicCalendarResponse!
+    """
+    Get the meal plan for a specific restaurant.
+    """
+    food(locations: [LocationInput!]!, language: String = "de"): FoodResponse!
+    """
+    Address and opening hours of the Hamburg canteens, as published on the menu page.
+    """
+    canteens(language: String = "de"): [Canteen!]!
+    """
+    The seven Studierendenwerk cafés and mensas at the HAW campuses, in a fixed order.
+    """
+    cafeterias(language: String = "de"): [Cafeteria!]!
+    """
+    Get the current in app announcements.
+    """
+    appAnnouncements(active: Boolean): [Announcement!]!
+}
+
+extend type Query {
+    accountSnapshot: AccountSyncSnapshot!
+}
+type Mutation {
+    accountSync(operations: [AccountSyncOperationInput!]!): AccountSyncResult!
+}
+
+extend type Query {
+    marketPosts(filter: MarketFilter, cursor: String): MarketPostPage!
+    marketPost(id: ID!): MarketPost
+    myMarketPosts: [MarketPost!]!
+    marketRulesAccepted: Boolean!
+}
+extend type Mutation {
+    acceptMarketRules(version: Int!): Boolean!
+    createMarketPost(input: MarketPostInput!, photoIds: [ID!]): MarketPost!
+    updateMarketPost(
+        id: ID!
+        input: MarketPostInput!
+        photoIds: [ID!]
+    ): MarketPost!
+    renewMarketPost(id: ID!): MarketPost!
+    setMarketPostStatus(id: ID!, status: String!): MarketPost!
+    deleteMarketPost(id: ID!): Boolean!
+    reportMarketPost(id: ID!, input: MarketReportInput!): Boolean!
+    reportMarketMessage(token: String!, input: MarketReportInput!): Boolean!
+    contactMarketPoster(id: ID!, message: String!): Boolean!
+}

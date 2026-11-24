@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792883662061,
+      "tag": "0000_hawconnect_baseline",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794920754326,
+      "tag": "0001_remove_web_dev_platform",
+      "breakpoints": true
+    }
+  ]
+}

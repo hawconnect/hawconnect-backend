@@ -1,0 +1,575 @@
+"""
+Meal data
+"""
+type Meal {
+    additives: [String!]
+    """
+    Name of the meal in different languages
+    """
+    name: MultiLanguageString!
+    """
+    Unique identifier of the meal on the specific day
+    """
+    id: ID!
+    """
+    Unique identifier of the meal, independent of the day
+    """
+    mealId: ID!
+    """
+    Category of the meal (main, soup or salad)
+    """
+    category: String!
+    """
+    Prices for different types of customers (student, employee, guest)
+    """
+    prices: Prices!
+    """
+    List of allergens (e.g. gluten, lactose, etc.)
+    """
+    allergens: [String]
+    """
+    List of flags (e.g. vegan, vegetarian, etc.)
+    """
+    flags: [String]
+    """
+    Icon names exactly as shown on the Studierendenwerk menu page (e.g. vega, pork, lact), in page order.
+    """
+    icons: [String!]
+    """
+    Nutritional values for the meal
+    """
+    nutrition: Nutrition
+    """
+    Variants or toppings of the meal, like bread, sauce, etc.
+    """
+    variants: [Variation!]
+    """
+    Original language of the meal name
+    """
+    originalLanguage: OriginalLanguage!
+    """
+    Static meals are always available, non-static meals are only available on specific days
+    """
+    static: Boolean!
+    """
+    Restaurant where the meal is available (BerlinerTorMensa, BergedorfMensa, FinkenauMensa)
+    """
+    restaurant: String!
+}
+
+"""
+Variants of a meal
+"""
+type Variation {
+    """
+    Name of the variant in different languages
+    """
+    name: MultiLanguageString!
+    """
+    True if the variant is an additional topping and not a variant of the meal
+    """
+    additional: Boolean!
+    """
+    Prices for different types of customers (student, employee, guest)
+    """
+    prices: Prices!
+    """
+    Unique identifier of the variant
+    """
+    id: ID!
+    """
+    Unique identifier of the meal, independent of the day
+    """
+    mealId: ID!
+    """
+    List of allergens (e.g. gluten, lactose, etc.)
+    """
+    allergens: [String]
+    """
+    List of flags (e.g. vegan, vegetarian, etc.)
+    """
+    flags: [String]
+    """
+    Nutritional values for the variant
+    """
+    nutrition: Nutrition
+    """
+    Original language of the variant name
+    """
+    originalLanguage: OriginalLanguage!
+    """
+    Static variants are always available, non-static variants are only available on specific days
+    """
+    static: Boolean!
+    """
+    Restaurant where the variant is available (BerlinerTorMensa, BergedorfMensa, FinkenauMensa)
+    """
+    restaurant: String
+    """
+    Parent meal for a variant meal
+    """
+    parent: Parent
+}
+
+"""
+Nutritional values for a meal. Currently only available at Mensa. Values are per average portion.
+"""
+type Nutrition {
+    """
+    Energy in kilojoules
+    """
+    kj: Float!
+    """
+    Energy in kilocalories
+    """
+    kcal: Float!
+    """
+    Fat in grams
+    """
+    fat: Float!
+    """
+    Saturated fat in grams
+    """
+    fatSaturated: Float!
+    """
+    Carbohydrates in grams
+    """
+    carbs: Float!
+    """
+    Sugar in grams
+    """
+    sugar: Float!
+    """
+    Fiber in grams
+    """
+    fiber: Float!
+    """
+    Protein in grams
+    """
+    protein: Float!
+    """
+    Salt in grams
+    """
+    salt: Float!
+}
+
+"""
+Prices for different types of customers
+"""
+type Prices {
+    """
+    Price for students
+    """
+    student: Float
+    """
+    Price for employees
+    """
+    employee: Float
+    """
+    Price for guests
+    """
+    guest: Float
+}
+
+"""
+Provides a list of meals for a specific day
+"""
+type Food {
+    """
+    Date of the meal list
+    """
+    timestamp: String!
+    """
+    List of meals
+    """
+    meals: [Meal!]
+}
+
+"""
+Error message for the food query
+"""
+type FoodError {
+    """
+    Location of the restaurant
+    """
+    location: String!
+    """
+    Error message
+    """
+    message: String!
+}
+
+"""
+A line of opening hours exactly as published (days and time range).
+"""
+type OpeningLine {
+    days: String!
+    time: String!
+}
+
+"""
+Address and opening hours of a canteen, as published on the menu page.
+"""
+type Canteen {
+    id: ID!
+    name: String!
+    address: [String!]!
+    general: [OpeningLine!]!
+    distribution: [OpeningLine!]!
+}
+
+"""
+Opening hours of one line in machine-readable form (ISO weekdays 1 = Monday, 24-hour HH:MM in Europe/Berlin).
+"""
+type ParsedOpening {
+    weekdays: [Int!]!
+    open: String!
+    close: String!
+}
+
+"""
+A line of opening hours exactly as published on the Studierendenwerk location page. `parsed` is null when the line is not understood or the German and English pages disagree.
+"""
+type CafeteriaOpeningLine {
+    days: String!
+    time: String!
+    parsed: ParsedOpening
+}
+
+"""
+An offer listed on the Studierendenwerk location page (breakfast, seats, pizza, ...).
+"""
+type CafeteriaOffer {
+    key: String!
+    title: String!
+}
+
+"""
+A café or mensa of the Studierendenwerk Hamburg at an HAW campus, as published on its location page.
+"""
+type Cafeteria {
+    id: ID!
+    name: String!
+    campus: String!
+    """
+    False when the location page has never been read successfully.
+    """
+    available: Boolean!
+    """
+    When the served page was last read successfully.
+    """
+    updatedAt: String
+    """
+    True when English was requested but only the German page is available.
+    """
+    germanOnly: Boolean!
+    description: String
+    offers: [CafeteriaOffer!]!
+    address: [String!]!
+    general: [CafeteriaOpeningLine!]!
+    distribution: [CafeteriaOpeningLine!]!
+    """
+    The Studierendenwerk location page in the requested language.
+    """
+    sourceUrl: String!
+    """
+    True when the place has a daily menu in the food query.
+    """
+    hasMenu: Boolean!
+}
+
+type FoodResponse {
+    updatedAt: String
+    stale: Boolean!
+    available: Boolean!
+    translationFallback: Boolean!
+    """
+    List of meal days
+    """
+    foodData: [Food!]
+    """
+    Error message for the food query
+    """
+    errors: [FoodError!]
+}
+
+"""
+Parent meal for a variant meal
+"""
+type Parent {
+    """
+    Unique identifier of the parent meal
+    """
+    id: ID!
+    """
+    Category of the parent meal (main, soup or salad)
+    """
+    category: String!
+    """
+    Name of the parent meal in different languages
+    """
+    name: MultiLanguageString!
+}
+
+"""
+Announcement data to display on top of the apps dashboard
+"""
+type Announcement {
+    """
+    Unique identifier of the announcement
+    """
+    id: ID!
+    """
+    Platform where the announcement is displayed
+    """
+    platform: [Platform!]!
+    """
+    UserKind to target the announcement to specific user groups
+    """
+    userKind: [UserKind!]!
+    """
+    Title of the announcement in different languages
+    """
+    title: MultiLanguageString!
+    """
+    Description of the announcement in different languages
+    """
+    description: MultiLanguageString!
+    """
+    Start date and time when the announcement is displayed
+    """
+    startDateTime: DateTime!
+    """
+    End date and time when the announcement is displayed
+    """
+    endDateTime: DateTime!
+    """
+    Priority of the announcement, higher are more important
+    """
+    priority: Int!
+    """
+    URL to the announcement
+    """
+    url: String
+    """
+    Image URL for the announcement
+    """
+    imageUrl: String
+    """
+    Creation date of the announcement
+    """
+    createdAt: DateTime!
+    """
+    Last update date of the announcement
+    """
+    updatedAt: DateTime!
+}
+
+"""
+String in multiple languages (German and English)
+"""
+type MultiLanguageString {
+    """
+    German language code
+    """
+    de: String
+    """
+    English language code
+    """
+    en: String
+}
+
+"Private, account-scoped sync record. Payload is JSON; transport requires a verified session."
+type AccountSyncRecord {
+    kind: String!
+    entityId: ID!
+    revision: Int!
+    deleted: Boolean!
+    payloadJson: String!
+}
+type AccountSyncConflict {
+    kind: String!
+    entityId: ID!
+    revision: Int!
+}
+type AccountSyncSnapshot {
+    records: [AccountSyncRecord!]!
+}
+type AccountSyncResult {
+    records: [AccountSyncRecord!]!
+    conflicts: [AccountSyncConflict!]!
+}
+
+type AcademicCalendarResponse {
+    semesters: [AcademicSemester!]!
+    updatedAt: String
+    available: Boolean!
+    stale: Boolean!
+}
+type AcademicSemester {
+    key: String!
+    name: MultiLanguageString!
+    events: [AcademicCalendarEvent!]!
+}
+type AcademicCalendarEvent {
+    id: String!
+    name: MultiLanguageString!
+    begin: String!
+    end: String
+    hasHours: Boolean!
+}
+
+type HawEventsResponse {
+    managedAvailable: Boolean!
+    events: [HawEvent!]!
+    updatedAt: String
+    available: Boolean!
+    stale: Boolean!
+    truncated: Boolean!
+    sourceUrl: String!
+}
+type HawEvent {
+    origin: String!
+    id: String!
+    title: String!
+    sourceUrl: String!
+    date: String!
+    endDate: String
+    dateLabel: String!
+    timeLabel: String
+    startTime: String
+    endTime: String
+    location: String
+}
+
+type HawNewsResponse {
+    items: [HawNewsItem!]!
+    language: String!
+    updatedAt: String
+    available: Boolean!
+    stale: Boolean!
+    sourceUrl: String!
+}
+type HawNewsItem {
+    id: String!
+    title: String!
+    url: String!
+    teaser: String
+    date: String!
+    categories: [String!]!
+    imageUrl: String
+    imageCredit: String
+}
+
+type HawClubLink {
+    title: String!
+    url: String!
+}
+type HawClub {
+    descriptionHtml: String
+    contentLanguage: String
+    id: ID!
+    title: String!
+    description: String!
+    sourceUrl: String!
+    links: [HawClubLink!]!
+}
+type HawClubsResponse {
+    clubs: [HawClub!]!
+    available: Boolean!
+    stale: Boolean!
+    updatedAt: String
+    sourceUrl: String!
+}
+
+type CampusLifePublicEvent {
+    id: Int!
+    organizerId: Int!
+    organizerName: String!
+    title: MultiLanguageString!
+    description: MultiLanguageString!
+    startDateTime: String!
+    endDateTime: String
+    location: String
+    eventUrl: String
+}
+type CampusLifePublicOrganizer {
+    id: Int!
+    name: String!
+    description: MultiLanguageString!
+    location: String
+    website: String
+    instagram: String
+    linkedin: String
+    nonProfit: Boolean
+    registrationNumber: String
+}
+type CampusLifePublicFeed {
+    available: Boolean!
+    events: [CampusLifePublicEvent!]!
+    organizers: [CampusLifePublicOrganizer!]!
+}
+
+"""
+A marketplace post. Anyone may browse; posting, contacting and reporting need an account.
+"""
+type MarketPost {
+    id: ID!
+    type: String!
+    category: String!
+    title: String!
+    description: String!
+    priceEur: Float
+    priceFree: Boolean!
+    priceUnit: String
+    location: String
+    """
+    ISO date the offer or request becomes available.
+    """
+    availableFrom: String
+    details: MarketDetails!
+    status: String!
+    createdAt: String!
+    expiresAt: String!
+    isOwn: Boolean!
+    """
+    Short-lived signed photo URLs.
+    """
+    photoUrls: [String!]!
+}
+
+"""
+Category-specific listing fields; only the ones that apply to the listing are set.
+"""
+type MarketDetails {
+    employer: String
+    jobType: String
+    workMode: String
+    languages: [String!]
+    weeklyHours: Int
+    requirements: String
+    applyMethod: String
+    applyUrl: String
+    applyEmail: String
+    applyDeadline: String
+    contactName: String
+    contactRole: String
+    contactEmail: String
+    companyWebsite: String
+    skills: String
+    portfolioUrl: String
+    housingType: String
+    rentalDuration: String
+    deposit: Int
+    rentIncludes: [String!]
+    sizeSqm: Int
+    rooms: Int
+    furnished: String
+    facilities: [String!]
+    occupation: String
+}
+
+type MarketPostPage {
+    posts: [MarketPost!]!
+    nextCursor: String
+}
