@@ -32,6 +32,8 @@ COPY --from=prerelease /usr/src/app/index.ts .
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/tsconfig.json .
 COPY --from=prerelease /usr/src/app/src src
+# Sign-in clients (app and console), read at startup and by accounts:migrate.
+COPY --from=prerelease /usr/src/app/config/oidc-clients.json config/oidc-clients.json
 COPY --from=prerelease /usr/src/app/startup.sh .
 RUN chmod +x startup.sh
 
